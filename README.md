@@ -43,7 +43,7 @@ Some text with a [link](https://example.com/some/link){: .alert-link} that shoul
 ### Copy link to paragraph
 
 The template includes a little JavaScript to add link icons in front of all `h1, h2, h3` **if they have a non empty id attribute**.
-The icon becomes visible when hovering over a headline and on click a deep link to that headline is put into the clipboard.
+The icon becomes visible when hovering over a headline and add a deep link to it into clipboard on click.
 
 The script is located in `/assets/js/paragraph-link.js`
 
