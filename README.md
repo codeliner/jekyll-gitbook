@@ -47,6 +47,35 @@ The icon becomes visible when hovering over a headline. On click a deep link to 
 
 The script is located in `/assets/js/paragraph-link.js`
 
+### Accordion Navigation
+
+`/assets/js/paragraph-link.js` also includes an accordion logic for the sidebar navigation. See `_includes/toc-date.html` for an example
+how to create a category (overview of posts in the example) that is collapsed by default and can be shown on click.
+The active paragraph is also highlighted in the sidebar while scrolling.
+
+### Lightbox
+
+To enable lightbox include images as HTML like shown in this example:
+
+```html
+<a href="{{site.baseurl}}/assets/images/node_cody_tutorial_succeeding_exercise_3.png" data-lightbox="Succeeding-Ex-3" data-title="Succeeding Exercise 3">
+    <span class="lightbox-indicator"></span>
+    <img src="{{site.baseurl}}/assets/images/node_cody_tutorial_succeeding_exercise_3.png" />
+</a>
+```
+
+### Youtube Video
+
+Responsive youtube videos can be included as well:
+
+```
+<div class="video-container">
+    <iframe class="video" src="https://www.youtube-nocookie.com/embed/0FAgsPNqUV4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+```
+
+*Note that the video iframe has no width or height defined! It's controlled by the `.video-container` wrapper div.*
+
 ## Demo
 
 Live demo on Github Pages: [https://sighingnow.github.io/jekyll-gitbook](https://sighingnow.github.io/jekyll-gitbook)

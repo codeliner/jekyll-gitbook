@@ -36,15 +36,142 @@
         })
     }
 
+    /* Highlight active paragraph in sidebar */
+    let currentAnchors = [];
+
+    const detectActiveAnchor = () => {
+        const anchors = Array.from(document.querySelectorAll('h2, h3'));
+        const bookBody = document.querySelector('.book-body');
+        const innerBody = document.querySelector('.book-body .body-inner');
+
+        if(anchors.length === 0) {
+            return null;
+        }
+
+        let lastAnchor = anchors[0];
+
+        anchors.forEach(anchor => {
+            if(anchor.getBoundingClientRect().top <= 100) {
+                lastAnchor = anchor;
+            }
+        })
+
+        // Page is scrollable and bottom is reached. Let's highlight the anchor that's closest to the top, but fully visible
+        if(anchors.indexOf(lastAnchor) < anchors.length - 1
+            && (innerBody.scrollTop > 0 && isScrolledToBottom(innerBody) || bookBody.scrollTop > 0 && isScrolledToBottom(bookBody))) {
+            [...anchors].reverse().forEach(anchor => {
+                if(anchor.getBoundingClientRect().top > 100) {
+                    lastAnchor = anchor;
+                }
+            });
+        }
+
+        return lastAnchor;
+    }
+
+    const isScrolledToBottom = (innerBody) => {
+        return !!innerBody && (innerBody.scrollHeight ==
+            innerBody.scrollTop +
+            window.innerHeight);
+    }
+
+    let tick = false;
+
+    const scrollListener = () => {
+
+        if(!tick) {
+            window.requestAnimationFrame(() => {
+                tick = false;
+            });
+
+            tick = true;
+        } else {
+            return;
+        }
+
+        const items = document.querySelectorAll('.chapter.active ul li');
+
+        const newActiveAnchor = detectActiveAnchor();
+
+        items.forEach(item => {
+            item.classList.remove('active')
+
+            const a = item.children.item(0);
+
+            if(a && newActiveAnchor && a.getAttribute('href') === '#' + newActiveAnchor.getAttribute('id')) {
+                item.classList.add('active');
+            }
+        });
+    }
+
+    const initAccordion = (accordionName) => {
+        const accord = document.querySelector('#'+accordionName);
+        const accordItems = document.querySelectorAll('.'+accordionName);
+
+        accord.parentElement.addEventListener('click', () => {
+            accord.classList.toggle('open')
+
+            accordItems.forEach(item => {
+                item.classList.toggle('accordion-visible');
+                item.classList.toggle('accordion-hidden');
+            })
+        })
+    }
+
+    /** Sidebar Nav Accordion */
+    const initAccordions = () => {
+        document.querySelectorAll('ul.summary h4 span').forEach(accordIndicator => {
+            initAccordion(accordIndicator.id);
+        })
+
+        const activeChapter = document.querySelector('.chapter.active');
+
+        if(activeChapter) {
+            activeChapter.classList.forEach(className => {
+                if(className.match(/[a-z]+-accordion/)) {
+                    const activeAccord = document.querySelector('#'+className);
+                    const activeAccordItems = document.querySelectorAll('.'+className);
+                    activeAccord.classList.toggle('open');
+                    activeAccordItems.forEach(item => {
+                        item.classList.toggle('accordion-visible');
+                        item.classList.toggle('accordion-hidden');
+                    })
+                }
+            })
+        }
+    }
 
 
-    var currentHref = null;
+    var currentPath = null;
 
     window.setInterval(() => {
-        if(currentHref !== window.location.href) {
+        if(currentPath !== window.location.pathname) {
             addParagraphLinks();
-            currentHref = window.location.href;
+            initAccordions();
+
+            const bookBody = document.querySelector('.book-body');
+            const innerBody = document.querySelector('.book-body .body-inner');
+
+            if(bookBody && innerBody) {
+                console.log("attach scroll listener", innerBody);
+
+                innerBody.addEventListener('scroll', scrollListener);
+                bookBody.addEventListener('scroll', scrollListener);
+            }
+
+            currentPath = window.location.pathname;
         }
+
     }, 100);
+
+    window.setTimeout(() => {
+        if(window.location.hash !== '') {
+            const scrollToEl = document.querySelector(window.location.hash);
+
+            if(scrollToEl) {
+                scrollToEl.scrollIntoView(true);
+            }
+        }
+    }, 150)
 })();
 
