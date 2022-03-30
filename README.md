@@ -133,6 +133,8 @@ configuration in `_config.yml`:
 ```yaml
 toc:
     enabled: true
+    h_min: 1
+    h_max: 3
 ```
 
 ## License

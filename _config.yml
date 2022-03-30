@@ -34,11 +34,18 @@ syntax_highlighter_style: colorful
 
 markdown_ext:     markdown,mkdown,mkdn,mkd,md
 
-# Permalinks
-permalink:        /:categories/:year-:month-:day-:title:output_ext
-
 exclude:
   - _drafts
+
+collections:
+  pages:
+    output: true
+    permalink: /:collection/:path/
+    title: Examples
+  posts:
+    output: true
+    permalink: /:categories/:year-:month-:day-:title:output_ext
+    title: Overview
 
 destination:      ./_site
 incremental:      false
